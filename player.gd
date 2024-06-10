@@ -3,11 +3,13 @@ extends CharacterBody3D
 
 
 @onready var animated_sprite_2d = $CanvasLayer/GunBase/AnimatedSprite2D
-@onready var ray_cast_3d = $RayCast3D
+@onready var ray_cast_3d = $Head/RayCast3D
 @onready var shoot_sound = $ShootSound
+@onready var camera_3d = $Head/Camera3D
+@onready var head = $Head
 
 const SPEED = 5.0
-const mouse_sens = 0.5
+const mouse_sens = 0.005
 
 var can_shoot = true
 var dead = false
@@ -21,9 +23,11 @@ func _input(event):
 	if dead:
 		return
 	if event is InputEventMouseMotion:
-		rotation_degrees.y -= event.relative.x * mouse_sens
-	
-	
+		head.rotate_y(-event.relative.x * mouse_sens)
+		camera_3d.rotate_x(-event.relative.y * mouse_sens)
+		camera_3d.rotation.x = clamp(camera_3d.rotation.x, deg_to_rad(-40), deg_to_rad(60))
+		
+		
 func _process(delta):
 	if Input.is_action_just_pressed("exit"):
 		get_tree().quit()
@@ -37,7 +41,7 @@ func _process(delta):
 func _physics_process(delta):
 
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forwards", "move_backwards")
-	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	var direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
