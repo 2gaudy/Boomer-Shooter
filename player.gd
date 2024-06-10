@@ -23,6 +23,7 @@ func _input(event):
 	if event is InputEventMouseMotion:
 		rotation_degrees.y -= event.relative.x * mouse_sens
 	
+	
 func _process(delta):
 	if Input.is_action_just_pressed("exit"):
 		get_tree().quit()

@@ -35,9 +35,7 @@ func attempt_to_kill_player():
 	
 	if result.is_empty():
 		player.kill()
-	
-	
-	
+		
 func kill():
 	dead = true
 	$DeathSound.play()
